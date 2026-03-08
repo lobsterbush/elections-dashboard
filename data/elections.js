@@ -988,12 +988,20 @@ const ELECTIONS_DATA = [
   {
     country: "Japan", iso3: "JPN", region: "Eastern Asia", continent: "Asia",
     elections: [
+      // House of Representatives (Lower House)
       {year:1993,type:"Parliamentary",month:7},{year:1996,type:"Parliamentary",month:10},
       {year:2000,type:"Parliamentary",month:6},{year:2003,type:"Parliamentary",month:11},
       {year:2005,type:"Parliamentary",month:9},{year:2009,type:"Parliamentary",month:8},
       {year:2012,type:"Parliamentary",month:12},{year:2014,type:"Parliamentary",month:12},
       {year:2017,type:"Parliamentary",month:10},{year:2021,type:"Parliamentary",month:10},
-      {year:2024,type:"Parliamentary",month:10}
+      {year:2024,type:"Parliamentary",month:10},
+      // House of Councillors (Upper House)
+      {year:1992,type:"Parliamentary",month:7},{year:1995,type:"Parliamentary",month:7},
+      {year:1998,type:"Parliamentary",month:7},{year:2001,type:"Parliamentary",month:7},
+      {year:2004,type:"Parliamentary",month:7},{year:2007,type:"Parliamentary",month:7},
+      {year:2010,type:"Parliamentary",month:7},{year:2013,type:"Parliamentary",month:7},
+      {year:2016,type:"Parliamentary",month:7},{year:2019,type:"Parliamentary",month:7},
+      {year:2022,type:"Parliamentary",month:7},{year:2025,type:"Parliamentary",month:7}
     ]
   },
   {
