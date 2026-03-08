@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Elections Dashboard (1991–Present)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Global Elections Dashboard</h1>
+        <p class="subtitle">National-level elections across countries, 1991–2025</p>
+        <p class="attribution">Data compiled from NELDA, IDEA, and official records</p>
+    </header>
+
+    <main>
+        <!-- Summary Cards -->
+        <section class="summary-cards">
+            <div class="card" id="card-total">
+                <span class="card-value" id="total-elections">—</span>
+                <span class="card-label">Total Elections</span>
+            </div>
+            <div class="card" id="card-countries">
+                <span class="card-value" id="total-countries">—</span>
+                <span class="card-label">Countries</span>
+            </div>
+            <div class="card" id="card-presidential">
+                <span class="card-value" id="total-presidential">—</span>
+                <span class="card-label">Presidential</span>
+            </div>
+            <div class="card" id="card-parliamentary">
+                <span class="card-value" id="total-parliamentary">—</span>
+                <span class="card-label">Parliamentary</span>
+            </div>
+            <div class="card" id="card-avg">
+                <span class="card-value" id="avg-per-year">—</span>
+                <span class="card-label">Avg / Year</span>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="controls">
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="filter-continent">Continent</label>
+                    <select id="filter-continent">
+                        <option value="">All Continents</option>
+                        <option value="Africa">Africa</option>
+                        <option value="Americas">Americas</option>
+                        <option value="Asia">Asia</option>
+                        <option value="Europe">Europe</option>
+                        <option value="Oceania">Oceania</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-type">Election Type</label>
+                    <select id="filter-type">
+                        <option value="">All Types</option>
+                        <option value="Presidential">Presidential</option>
+                        <option value="Parliamentary">Parliamentary</option>
+                        <option value="Constituent Assembly">Constituent Assembly</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-year-start">From Year</label>
+                    <select id="filter-year-start"></select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-year-end">To Year</label>
+                    <select id="filter-year-end"></select>
+                </div>
+            </div>
+            <div class="actions">
+                <button id="clear-filters" class="btn-secondary">Clear Filters</button>
+            </div>
+        </section>
+
+        <!-- Charts Row 1: Timeline + Type -->
+        <section class="chart-row two-col">
+            <div class="chart-container wide">
+                <h2>Elections per Year</h2>
+                <canvas id="chart-per-year"></canvas>
+            </div>
+            <div class="chart-container narrow">
+                <h2>Election Type Distribution</h2>
+                <canvas id="chart-type-dist"></canvas>
+            </div>
+        </section>
+
+        <!-- Charts Row 2: By Continent + Top Countries -->
+        <section class="chart-row two-col">
+            <div class="chart-container">
+                <h2>Elections by Continent</h2>
+                <canvas id="chart-by-continent"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Top 25 Countries by Election Count</h2>
+                <canvas id="chart-top-countries"></canvas>
+            </div>
+        </section>
+
+        <!-- Charts Row 3: Regional Trends + By Region -->
+        <section class="chart-row two-col">
+            <div class="chart-container wide">
+                <h2>Regional Trends Over Time (5-Year Bins)</h2>
+                <canvas id="chart-regional-trends"></canvas>
+            </div>
+            <div class="chart-container narrow">
+                <h2>Elections by Region</h2>
+                <canvas id="chart-by-region"></canvas>
+            </div>
+        </section>
+
+        <!-- Charts Row 4: Decade comparison + Election frequency -->
+        <section class="chart-row two-col">
+            <div class="chart-container">
+                <h2>Elections by Decade</h2>
+                <canvas id="chart-by-decade"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Average Elections per Country by Continent</h2>
+                <canvas id="chart-avg-per-country"></canvas>
+            </div>
+        </section>
+
+        <!-- Leader Table -->
+        <section class="leader-section">
+            <h2>World Leaders Since 1991</h2>
+            <div class="leader-controls">
+                <input type="text" id="leader-search" placeholder="Search leaders by name, country, or party…" aria-label="Search leaders">
+                <div class="filter-group">
+                    <label for="leader-filter-continent">Continent</label>
+                    <select id="leader-filter-continent">
+                        <option value="">All</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="leader-filter-current">Status</label>
+                    <select id="leader-filter-current">
+                        <option value="">All</option>
+                        <option value="current">Current</option>
+                        <option value="former">Former</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="leader-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="country">Country ↕</th>
+                            <th data-sort="name">Leader ↕</th>
+                            <th data-sort="title">Title ↕</th>
+                            <th data-sort="party">Party ↕</th>
+                            <th data-sort="start_year">Start ↕</th>
+                            <th data-sort="end_year">End ↕</th>
+                            <th data-sort="tenure">Tenure ↕</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leader-tbody"></tbody>
+                </table>
+            </div>
+            <div class="table-info">
+                <span id="leader-count">Loading…</span>
+            </div>
+        </section>
+
+        <!-- Country Detail Modal -->
+        <div id="country-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <button class="modal-close" id="modal-close">✕</button>
+                <h2 id="modal-country-name"></h2>
+                <div class="modal-meta" id="modal-meta"></div>
+                <div class="modal-chart-wrap">
+                    <canvas id="chart-country-timeline"></canvas>
+                </div>
+                <div id="modal-elections-list"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>
+            Built by <a href="https://charlescrabtree.org" target="_blank">Charles Crabtree</a>,
+            Senior Lecturer, School of Social Sciences, Monash University & K-Club Professor, University College, Korea University.
+        </p>
+        <p class="footer-note">
+            Data compiled from NELDA (Hyde & Marinov 2012), International IDEA, and official election records.
+            Last updated March 2025.
+        </p>
+    </footer>
+
+    <script src="data/elections.js"></script>
+    <script src="data/leaders.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
