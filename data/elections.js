@@ -298,10 +298,17 @@ const ELECTIONS_DATA = [
   {
     country: "Liberia", iso3: "LBR", region: "Sub-Saharan Africa", continent: "Africa",
     elections: [
+      // Presidential + House & Senate (general elections)
       {year:1997,type:"Presidential",month:7},{year:1997,type:"Parliamentary",month:7},
       {year:2005,type:"Presidential",month:10},{year:2005,type:"Parliamentary",month:10},
       {year:2011,type:"Presidential",month:10},{year:2011,type:"Parliamentary",month:10},
+      // Midterm Senate election (upper house, half of seats)
+      {year:2014,type:"Parliamentary",month:12},
+      // Presidential + House & Senate (general elections)
       {year:2017,type:"Presidential",month:10},{year:2017,type:"Parliamentary",month:10},
+      // Midterm Senate election (upper house, half of seats)
+      {year:2020,type:"Parliamentary",month:12},
+      // Presidential + House & Senate (general elections)
       {year:2023,type:"Presidential",month:10},{year:2023,type:"Parliamentary",month:10}
     ]
   },
@@ -1220,10 +1227,18 @@ const ELECTIONS_DATA = [
   {
     country: "Thailand", iso3: "THA", region: "South-Eastern Asia", continent: "Asia",
     elections: [
+      // House of Representatives (lower house)
       {year:1992,type:"Parliamentary",month:3},{year:1992,type:"Parliamentary",month:9},
       {year:1995,type:"Parliamentary",month:7},{year:1996,type:"Parliamentary",month:11},
+      // Senate (upper house — directly elected, separate from House)
+      {year:2000,type:"Parliamentary",month:3},
+      // House of Representatives (lower house)
       {year:2001,type:"Parliamentary",month:1},{year:2005,type:"Parliamentary",month:2},
-      {year:2006,type:"Parliamentary",month:4},{year:2007,type:"Parliamentary",month:12},
+      {year:2006,type:"Parliamentary",month:4},
+      // Senate (upper house — directly elected, separate from House)
+      {year:2006,type:"Parliamentary",month:4},
+      // House of Representatives (lower house)
+      {year:2007,type:"Parliamentary",month:12},
       {year:2011,type:"Parliamentary",month:7},{year:2014,type:"Parliamentary",month:2},
       {year:2019,type:"Parliamentary",month:3},{year:2023,type:"Parliamentary",month:5}
     ]
@@ -1431,13 +1446,24 @@ const ELECTIONS_DATA = [
   {
     country: "Czech Republic", iso3: "CZE", region: "Eastern Europe", continent: "Europe",
     elections: [
+      // Chamber of Deputies (lower house)
       {year:1992,type:"Parliamentary",month:6},{year:1996,type:"Parliamentary",month:5},
       {year:1998,type:"Parliamentary",month:6},{year:2002,type:"Parliamentary",month:6},
       {year:2006,type:"Parliamentary",month:6},{year:2010,type:"Parliamentary",month:5},
-      {year:2013,type:"Presidential",month:1},{year:2013,type:"Parliamentary",month:10},
-      {year:2017,type:"Parliamentary",month:10},{year:2018,type:"Presidential",month:1},
-      {year:2021,type:"Parliamentary",month:10},{year:2023,type:"Presidential",month:1},
-      {year:2025,type:"Parliamentary",month:10}
+      {year:2013,type:"Parliamentary",month:10},{year:2017,type:"Parliamentary",month:10},
+      {year:2021,type:"Parliamentary",month:10},{year:2025,type:"Parliamentary",month:10},
+      // Senate (upper house — 1/3 renewed every 2 years, held separately)
+      {year:1996,type:"Parliamentary",month:11},{year:1998,type:"Parliamentary",month:11},
+      {year:2000,type:"Parliamentary",month:11},{year:2002,type:"Parliamentary",month:10},
+      {year:2004,type:"Parliamentary",month:11},{year:2006,type:"Parliamentary",month:10},
+      {year:2008,type:"Parliamentary",month:10},{year:2010,type:"Parliamentary",month:10},
+      {year:2012,type:"Parliamentary",month:10},{year:2014,type:"Parliamentary",month:10},
+      {year:2016,type:"Parliamentary",month:10},{year:2018,type:"Parliamentary",month:10},
+      {year:2020,type:"Parliamentary",month:10},{year:2022,type:"Parliamentary",month:9},
+      {year:2024,type:"Parliamentary",month:9},
+      // Presidential
+      {year:2013,type:"Presidential",month:1},{year:2018,type:"Presidential",month:1},
+      {year:2023,type:"Presidential",month:1}
     ]
   },
   {
