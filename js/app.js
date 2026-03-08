@@ -37,18 +37,34 @@
   /* ── Utility ── */
   function flatElections(data) {
     const out = [];
-    data.forEach((c) =>
-      c.elections.forEach((e) =>
-        out.push({ ...e, country: c.country, iso3: c.iso3, region: c.region, continent: c.continent })
-      )
-    );
+    data.forEach((c) => {
+      // Group by year+month to collapse same-day elections into one event
+      const groups = {};
+      c.elections.forEach((e) => {
+        const key = `${e.year}-${e.month}`;
+        if (!groups[key]) groups[key] = { year: e.year, month: e.month, types: [] };
+        if (!groups[key].types.includes(e.type)) groups[key].types.push(e.type);
+      });
+      Object.values(groups).forEach((g) => {
+        out.push({
+          year: g.year,
+          month: g.month,
+          type: g.types.sort().join(" & "),
+          types: g.types,
+          country: c.country,
+          iso3: c.iso3,
+          region: c.region,
+          continent: c.continent,
+        });
+      });
+    });
     return out;
   }
 
   function filtered() {
     let flat = flatElections(ELECTIONS_DATA);
     if (activeFilters.continent) flat = flat.filter((e) => e.continent === activeFilters.continent);
-    if (activeFilters.type) flat = flat.filter((e) => e.type === activeFilters.type);
+    if (activeFilters.type) flat = flat.filter((e) => e.types.includes(activeFilters.type));
     flat = flat.filter((e) => e.year >= activeFilters.yearStart && e.year <= activeFilters.yearEnd);
     return flat;
   }
@@ -82,8 +98,8 @@
   function updateCards(data) {
     const total = data.length;
     const countries = new Set(data.map((e) => e.country)).size;
-    const presidential = data.filter((e) => e.type === "Presidential").length;
-    const parliamentary = data.filter((e) => e.type === "Parliamentary").length;
+    const presidential = data.filter((e) => e.types.includes("Presidential")).length;
+    const parliamentary = data.filter((e) => e.types.includes("Parliamentary")).length;
     const years = activeFilters.yearEnd - activeFilters.yearStart + 1;
     document.getElementById("total-elections").textContent = total.toLocaleString();
     document.getElementById("total-countries").textContent = countries;
@@ -418,27 +434,39 @@
   /* ── Country modal ── */
   let countryChart = null;
 
+  function dedupeCountryElections(elections) {
+    const groups = {};
+    elections.forEach((e) => {
+      const key = `${e.year}-${e.month}`;
+      if (!groups[key]) groups[key] = { year: e.year, month: e.month, types: [] };
+      if (!groups[key].types.includes(e.type)) groups[key].types.push(e.type);
+    });
+    return Object.values(groups);
+  }
+
   function openCountryModal(countryName) {
     const countryData = ELECTIONS_DATA.find((c) => c.country === countryName);
     if (!countryData) return;
     const modal = document.getElementById("country-modal");
     document.getElementById("modal-country-name").textContent = countryName;
 
+    const deduped = dedupeCountryElections(countryData.elections);
+
     // Meta tags
     const meta = document.getElementById("modal-meta");
     meta.innerHTML = `
       <span class="tag">${countryData.continent}</span>
       <span class="tag">${countryData.region}</span>
-      <span class="tag">${countryData.elections.length} elections since 1991</span>
+      <span class="tag">${deduped.length} elections since 1991</span>
       <span class="tag">ISO: ${countryData.iso3}</span>
     `;
 
     // Timeline chart
     const byYear = {};
-    countryData.elections.forEach((e) => { byYear[e.year] = (byYear[e.year] || 0) + 1; });
+    deduped.forEach((e) => { byYear[e.year] = (byYear[e.year] || 0) + 1; });
     const years = [];
-    const minY = Math.min(...countryData.elections.map((e) => e.year));
-    const maxY = Math.max(...countryData.elections.map((e) => e.year));
+    const minY = Math.min(...deduped.map((e) => e.year));
+    const maxY = Math.max(...deduped.map((e) => e.year));
     for (let y = minY; y <= maxY; y++) years.push(y);
 
     if (countryChart) countryChart.destroy();
@@ -465,13 +493,16 @@
 
     // Elections list
     const listEl = document.getElementById("modal-elections-list");
-    const sorted = [...countryData.elections].sort((a, b) => b.year - a.year || b.month - a.month);
+    const sorted = [...deduped].sort((a, b) => b.year - a.year || b.month - a.month);
     listEl.innerHTML = sorted
       .map((e) => {
-        const cls = e.type === "Presidential" ? "presidential" : e.type === "Parliamentary" ? "parliamentary" : "constituent";
+        const badges = e.types.map((t) => {
+          const cls = t === "Presidential" ? "presidential" : t === "Parliamentary" ? "parliamentary" : "constituent";
+          return `<span class="election-type-badge ${cls}">${t}</span>`;
+        }).join(" ");
         return `<div class="election-item">
           <span>${MONTHS[e.month]} ${e.year}</span>
-          <span class="election-type-badge ${cls}">${e.type}</span>
+          ${badges}
         </div>`;
       })
       .join("");
